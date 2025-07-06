@@ -11,6 +11,7 @@ from fastapi.security import OAuth2PasswordBearer
 from data_processor import process_csv_file 
 from fastapi.responses import StreamingResponse
 import io
+import os
 
 
 
@@ -22,11 +23,13 @@ from sqlalchemy import ForeignKey, DateTime, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime, timedelta, timezone
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///var/data/users.db"
+DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///./users.db")
+SQLALCHEMY_DATABASE_URL = DATABASE_URL
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 
 
